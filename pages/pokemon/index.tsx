@@ -32,18 +32,6 @@ import Head from "next/head";
 import ModalDetail from "@components/modal";
 
 const useStyles = makeStyles({
-    sub: {
-        fontSize: "1rem",
-        color: "#42494D",
-    },
-    button: {
-        color: "#42494D",
-        textTransform: "none",
-        "&:hover": {
-            color: "#E6AB09",
-            background: "transparent",
-        },
-    },
     buttonYellow: {
         background: "#E6AB09",
         color: "#ffffff",
@@ -67,16 +55,6 @@ const useStyles = makeStyles({
         minHeight: 400,
         backgroundSize: "auto, auto",
         paddingBottom: 30,
-    },
-    btnOutlet: {
-        border: "solid 1px #42494D",
-        margin: 5,
-        color: " #42494D",
-    },
-    textInline: {
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
     },
 });
 
@@ -150,7 +128,6 @@ const PokemonList: FC = () => {
             setIsLoading(false);
         };
         getPokemonDetail();
-        console.log(pokemonDetail);
 
         setOpen(true);
     };

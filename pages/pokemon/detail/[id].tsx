@@ -28,50 +28,11 @@ import Navbar from "@components/navbar";
 import Head from "next/head";
 
 const useStyles = makeStyles({
-    sub: {
-        fontSize: "1rem",
-        color: "#42494D",
-    },
-    button: {
-        color: "#42494D",
-        textTransform: "none",
-        "&:hover": {
-            color: "#E6AB09",
-            background: "transparent",
-        },
-    },
-    buttonYellow: {
-        background: "#E6AB09",
-        color: "#ffffff",
-        fontWeight: "bold",
-        minWidth: 200,
-        marginTop: 10,
-        textTransform: "none",
-        padding: "10px 0.75rem",
-        "&:hover": {
-            color: "#E6AB09",
-        },
-    },
-    headTitle: {
-        fontSize: "3rem",
-        fontWeight: "bold",
-        color: "#42494D",
-    },
     content: {
         background: `url(${d2.src}) left bottom no-repeat`,
         minHeight: 400,
         backgroundSize: "auto, auto",
         paddingBottom: 30,
-    },
-    btnOutlet: {
-        border: "solid 1px #42494D",
-        margin: 5,
-        color: " #42494D",
-    },
-    textInline: {
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
     },
 });
 
@@ -211,7 +172,6 @@ const DetailPokemon: FC = () => {
                     },
                 },
             };
-            console.log(pokeEvolution);
 
             setPokemon(obj);
         } catch (error) {
@@ -219,7 +179,6 @@ const DetailPokemon: FC = () => {
         }
     };
     const evolution = pokemon?.evolution;
-    console.log(pokemon);
 
     return (
         <>
@@ -361,6 +320,14 @@ const DetailPokemon: FC = () => {
                                                                     borderRadius: 10,
                                                                     p: 1,
                                                                 }}
+                                                                onClick={() =>
+                                                                    route.push(
+                                                                        ROUTES_PATH.pokemon_type +
+                                                                            [
+                                                                                ab,
+                                                                            ],
+                                                                    )
+                                                                }
                                                             >
                                                                 {ab
                                                                     .charAt(0)
