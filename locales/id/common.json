@@ -1,4 +1,15 @@
 {
     "language-id": "Bahasa Indonesia",
-    "language-en": "English"
+    "language-en": "English",
+    "home-menu":"Beranda",
+    "type-menu":"Tipe Pokemon",
+    "weight":"Berat",
+    "height":"Tinggi",
+    "abilities":"Kekuatan",
+    "type":"Tipe",
+    "stats":"Status",
+    "habitat":"Habitat",
+    "evolution":"Evolusi",
+    "more":"Detail Selengkapnya",
+    "content-head":"Total Semua Generasi"
 }

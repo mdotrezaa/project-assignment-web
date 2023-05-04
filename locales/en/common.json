@@ -1,4 +1,15 @@
 {
     "language-id": "Bahasa Indonesia",
-    "language-en": "English"
+    "language-en": "English",
+    "home-menu":"Home",
+    "type-menu":"Pokemon Type",
+    "weight":"Weight",
+    "height":"Height",
+    "abilities":"Abilities",
+    "type":"Type",
+    "stats":"Status",
+    "habitat":"Habitat",
+    "evolution":"Evolution",
+    "more":"More Detail",
+    "content-head":"All Generation totaling"
 }

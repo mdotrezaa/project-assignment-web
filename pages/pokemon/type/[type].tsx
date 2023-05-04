@@ -4,6 +4,7 @@ import {
     AppBar,
     Box,
     Button,
+    CircularProgress,
     Container,
     Grid,
     ListItem,
@@ -15,19 +16,17 @@ import {
     Typography,
     makeStyles,
 } from "@material-ui/core";
-import logo from "../../public/images/pokeLogo.svg";
-import background from "../../public/images/bg.svg";
-import d1 from "../../public/images/d1.svg";
-import d2 from "../../public/images/d2.svg";
+import logo from "../../../public/images/pokeLogo.svg";
+import d1 from "../../../public/images/d1.svg";
+import d2 from "../../../public/images/d2.svg";
 import Image from "next/image";
-import baseApi, { cancelRequest } from "@utils/api";
 import axios from "axios";
-import Pagination from "@components/pagination";
-import List from "@components/list";
 import colorTypes from "@constants/color";
 import { ROUTES_PATH } from "@constants/config";
 import { useRouter } from "next/router";
 import Navbar from "@components/navbar";
+import List from "@components/list";
+import { common } from "@material-ui/core/colors";
 import Head from "next/head";
 import ModalDetail from "@components/modal";
 
@@ -63,7 +62,6 @@ const useStyles = makeStyles({
     },
     content: {
         background: `url(${d1.src}) left top no-repeat, url(${d2.src}) left bottom no-repeat`,
-        backgroundColor: "#FFCB3B",
         minHeight: 400,
         backgroundSize: "auto, auto",
         paddingBottom: 30,
@@ -81,8 +79,9 @@ const useStyles = makeStyles({
 });
 
 export interface IPokemon {
+    id: string;
     name: string;
-    id: number;
+    order: number;
     sprites: {
         front_default: string;
     };
@@ -117,29 +116,23 @@ export interface IPokemonDetail {
 interface IList {
     count: number;
 }
-const PokemonList: FC = () => {
+interface IType {
+    name: string;
+    url: string;
+}
+const PokemonsType: FC = () => {
     const { t } = useTranslation();
     const classes = useStyles();
     const route = useRouter();
+    const { type } = route.query;
 
     const [pokemon, setPokemon] = useState<IPokemon[]>([]);
+    const [types, setTypes] = useState<IType[]>([]);
     const [pokemonDetail, setPokemonDetail] = useState<IPokemonDetail>(null);
     const [count, setCount] = useState<IList>(0);
-    const [currentPage, setCurrentPage] = useState(1);
     const [open, setOpen] = useState(false);
     const [loading, setIsLoading] = useState(false);
 
-    const numPages = Math.ceil(count / 20);
-
-    const numButtons = 10; // change this value to adjust the number of buttons to show
-
-    const startPage = Math.max(currentPage - Math.floor(numButtons / 2), 1);
-    const endPage = Math.min(startPage + numButtons - 1, numPages);
-    const ref = useRef(null);
-
-    const handleClick = () => {
-        ref.current?.scrollIntoView({ behavior: "smooth" });
-    };
     const handleOpen = (name) => {
         const getPokemonDetail = async () => {
             setIsLoading(true);
@@ -158,12 +151,8 @@ const PokemonList: FC = () => {
 
     useEffect(() => {
         const getPokemon = async () => {
-            // setIsLoading(true);
-            const res = await axios.get(
-                `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${
-                    (currentPage - 1) * 20
-                }`,
-            );
+            setIsLoading(true);
+            const res = await axios.get("https://pokeapi.co/api/v2/pokemon/");
             setCount(res.data.count);
             const pokemons = await Promise.all(
                 res.data.results.map(async (pokemon: any) => {
@@ -174,76 +163,116 @@ const PokemonList: FC = () => {
                 }),
             );
             setPokemon(pokemons);
-            // setIsLoading(false);
+            setIsLoading(false);
         };
+        const getType = async () => {
+            setIsLoading(true);
+            const res = await axios.get(`https://pokeapi.co/api/v2/type`);
+            setTypes(res.data.results);
+        };
+        getType();
         getPokemon();
-    }, [currentPage]);
+    }, []);
 
-    const handlePageChange = (newPage: number) => {
-        setCurrentPage(newPage);
-    };
+    useEffect(() => {
+        if (type !== "all") {
+            const getPokemon = async () => {
+                setIsLoading(true);
+                const res = await axios.get(
+                    "https://pokeapi.co/api/v2/pokemon?limit=500",
+                );
+                setCount(res.data.count);
+                const pokemons = await Promise.all(
+                    res.data.results.map(async (pokemon: any) => {
+                        const poke = await axios.get(
+                            `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`,
+                        );
+                        return poke.data;
+                    }),
+                );
+                const filteredData = pokemons.filter((pokemon) =>
+                    pokemon.types.some(
+                        (typeData) => typeData.type.name === type,
+                    ),
+                );
+
+                setPokemon(filteredData);
+
+                setIsLoading(false);
+            };
+            const getType = async () => {
+                setIsLoading(true);
+                const res = await axios.get(`https://pokeapi.co/api/v2/type`);
+                setTypes(res.data.results);
+            };
+            getType();
+            getPokemon();
+        }
+    }, [route.query.type]);
+    console.log(type);
 
     return (
         <>
             <Head>
-                <title>{t("common:home-menu")}</title>
+                <title>{t("common:type-menu")}</title>
             </Head>
-            <Navbar>
-                <Container maxWidth="xl">
-                    <Grid container style={{ alignItems: "center" }}>
-                        <Grid item xs={6}>
-                            <Typography
-                                gutterBottom
-                                classes={{ root: classes.headTitle }}
-                            >
-                                {t("pokemon:head-title")}
-                            </Typography>
-                            <Typography variant="subtitle1" gutterBottom>
-                                {t("pokemon:sub-title")}
-                            </Typography>
-                            <Button
-                                onClick={handleClick}
-                                classes={{ root: classes.buttonYellow }}
-                            >
-                                {t("pokemon:btn-title")}
-                            </Button>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Image src={background} />
-                        </Grid>
-                    </Grid>
-                </Container>
-            </Navbar>
-            <Paper ref={ref} classes={{ root: classes.content }}>
-                <Box m={10} sx={{ pt: 10 }}>
-                    <Typography component="div" align="center">
+            <Navbar />
+            <Box m={10} sx={{ mt: 0 }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
                         <Box
                             sx={{
+                                fontSize: "2rem",
+                                textAlign: "center",
                                 fontWeight: "bold",
-                                m: 1,
-                                fontSize: "2.5rem",
                                 color: "#42494D",
+                                p: 1,
                             }}
                         >
-                            PokèDex
+                            {t("common:type-menu")}
                         </Box>
-                        <Box sx={{ color: "#42494D", fontSize: "1rem" }}>
-                            {t("common:content-head")}
-                        </Box>
-                        <Box sx={{ color: "#42494D", fontSize: "1rem" }}>
-                            {count} Pokemon
-                        </Box>
-                    </Typography>
+                    </Grid>
+                    {types?.map((ab: any) => {
+                        return (
+                            <Grid item xs={2}>
+                                <Box
+                                    sx={{
+                                        color: "#fff",
+                                        fontSize: ".75rem",
+                                        bgcolor: colorTypes[ab.name],
+                                        borderRadius: 10,
+                                        textAlign: "center",
+                                        fontWeight: "bold",
+                                        p: 1,
+                                    }}
+                                    onClick={() =>
+                                        route.push(
+                                            ROUTES_PATH.pokemon_type +
+                                                [ab?.name],
+                                        )
+                                    }
+                                >
+                                    {ab.name.charAt(0).toUpperCase() +
+                                        ab.name.slice(1)}
+                                </Box>
+                            </Grid>
+                        );
+                    })}
+                </Grid>
+            </Box>
+
+            <Paper
+                elevation={0}
+                classes={{ root: classes.content }}
+                style={{
+                    backgroundColor: colorTypes[type] || "#E6AB09",
+                }}
+            >
+                <Box m={10} sx={{ pt: 10 }}>
                     <List pokemon={pokemon} onOpen={(e) => handleOpen(e)} />
-                    <Pagination
-                        endPage={endPage}
-                        startPage={startPage}
-                        currentPage={currentPage}
-                        numPages={numPages}
-                        handlePageChange={handlePageChange}
-                    />
                 </Box>
             </Paper>
+
             <ModalDetail
                 pokemonDetail={pokemonDetail}
                 isOpen={open}
@@ -253,4 +282,4 @@ const PokemonList: FC = () => {
     );
 };
 
-export default PokemonList;
+export default PokemonsType;
