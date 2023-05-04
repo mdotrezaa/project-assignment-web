@@ -73,6 +73,8 @@ const List: React.FC<Props> = (props) => {
                                     alignItems: "center",
                                     minHeight: 300,
                                     marginBottom: 5,
+                                    boxShadow:
+                                        "5px 10px 21px rgba(0, 0, 0, 0.15)",
                                 }}
                                 key={pokemon.name}
                             >

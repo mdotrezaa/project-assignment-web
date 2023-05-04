@@ -408,12 +408,15 @@ const DetailPokemon: FC = () => {
                                             sx={{
                                                 fontWeight: "bold",
                                                 fontSize: "1rem",
-                                                border: "1px solid #42494D",
+                                                border: "1px solid #eee",
                                                 borderRadius: 5,
                                                 display: "flex",
                                                 flexDirection: "column",
                                                 justifyContent: "center",
                                                 textAlign: "center",
+                                                bgcolor: "#fff",
+                                                boxShadow:
+                                                    "5px 10px 21px rgba(0, 0, 0, 0.15)",
                                                 p: 1,
                                             }}
                                             onClick={() =>
@@ -435,12 +438,15 @@ const DetailPokemon: FC = () => {
                                                 sx={{
                                                     fontWeight: "bold",
                                                     fontSize: "1rem",
-                                                    border: "1px solid #42494D",
+                                                    border: "1px solid #eee",
                                                     borderRadius: 5,
                                                     display: "flex",
                                                     flexDirection: "column",
                                                     justifyContent: "center",
                                                     textAlign: "center",
+                                                    bgcolor: "#fff",
+                                                    boxShadow:
+                                                        "5px 10px 21px rgba(0, 0, 0, 0.15)",
                                                     p: 1,
                                                 }}
                                                 onClick={() =>
@@ -469,12 +475,15 @@ const DetailPokemon: FC = () => {
                                                 sx={{
                                                     fontWeight: "bold",
                                                     fontSize: "1rem",
-                                                    border: "1px solid #42494D",
+                                                    border: "1px solid #eee",
                                                     borderRadius: 5,
                                                     display: "flex",
                                                     flexDirection: "column",
                                                     justifyContent: "center",
                                                     textAlign: "center",
+                                                    bgcolor: "#fff",
+                                                    boxShadow:
+                                                        "5px 10px 21px rgba(0, 0, 0, 0.15)",
                                                     p: 1,
                                                 }}
                                                 onClick={() =>
